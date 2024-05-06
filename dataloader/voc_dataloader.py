@@ -6,7 +6,7 @@ from torch.utils.data.dataloader import default_collate
 
 
 class VOCDataset(Dataset):
-    def __init__(self, image_dir, annotation_dir, transform=None):
+    def __init__(self, image_dir, annotation_dir, transform=None, dp_num=None):
         """
         Args:
             image_dir (string): Directory with all the JPEG images.
@@ -17,6 +17,11 @@ class VOCDataset(Dataset):
         self.annotation_dir = annotation_dir
         self.transform = transform
         self.images = [os.path.splitext(file)[0] for file in os.listdir(image_dir) if file.endswith('.jpg')]
+
+        # Limit the number of images, used for testing
+        if dp_num:
+            self.images = self.images[:dp_num]
+
 
     def __len__(self):
         return len(self.images)
@@ -72,8 +77,8 @@ def collate_fn(batch):
     }
 
 class VOCDataLoader:
-    def __init__(self, image_dir, annotation_dir, batch_size=4, shuffle=True, num_workers=1, transform=None):
-        self.dataset = VOCDataset(image_dir, annotation_dir, transform=transform)
+    def __init__(self, image_dir, annotation_dir, batch_size=4, shuffle=True, num_workers=2, transform=None, dp_num=None):
+        self.dataset = VOCDataset(image_dir, annotation_dir, transform=transform, dp_num=dp_num)
         self.batch_size = batch_size
         self.shuffle = shuffle
         self.num_workers = num_workers

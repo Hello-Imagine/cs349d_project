@@ -10,12 +10,12 @@ from models.common import DetectMultiBackend
 from utils.general import non_max_suppression
 
 class YOLOv5SegmentationDetector:
-    def __init__(self, weights_path, img_size=640, conf_thresh=0.25, iou_thresh=0.45, device=None):
+    def __init__(self, weights_path, img_size=640, conf_thresh=0.25, iou_thresh=0.45):
         # Initialize the device to run the model on
-        self.device = device if device else ('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         
         # Load the model
-        self.model = DetectMultiBackend(weights_path, device=self.device)
+        self.model = DetectMultiBackend(weights_path)
         self.stride = self.model.stride
         self.names = self.model.names
         self.img_size = img_size
@@ -43,9 +43,10 @@ class YOLOv5SegmentationDetector:
                 if det is not None and len(det):
                     for *xyxy, conf, cls in det:
                         # Filter out detections with low confidence
-                        if conf < self.conf_thresh: continue
+                        if conf < self.conf_thresh or not (0<=int(cls)<80): continue
                         # Rescale coordinates to original image size
-                        xyxy = (np.array(xyxy) / self.stride).astype(int)
+                        xyxy = det[:, :4].cpu().numpy()
+                        xyxy = (xyxy / self.stride).astype(int)
                         # Append the detected object to the list
                         detected_objects.append({
                             'box': xyxy,

@@ -12,7 +12,7 @@ def main():
         ToTensor()
     ])
     # Setup data loader
-    data_loader = VOCDataLoader(VOC_IMAGE_DIR, VOC_ANNOTATION_DIR, transform=transform).get_data_loader()
+    data_loader = VOCDataLoader(VOC_IMAGE_DIR, VOC_ANNOTATION_DIR, transform=transform, dp_num=8).get_data_loader()
 
     # Setup YOLO detector
     # detector = YOLOv5Detector()
@@ -22,8 +22,9 @@ def main():
     for i, batch in enumerate(data_loader):
         images = batch['image']  # Extract images from batch
         detected_objects = detector.detect(images)
+        detected_names = [obj['class'] for obj in detected_objects]
         print(f"Batch {i + 1}:")
-        print("Detected objects:", detected_objects)
+        print("Detected objects names:", detected_names)
 
 if __name__ == '__main__':
     main()
