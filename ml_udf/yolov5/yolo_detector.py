@@ -25,34 +25,38 @@ class YOLOv5SegmentationDetector:
         # Load model into the specified device and set it to evaluation mode
         self.model.to(self.device).eval()
 
-    def detect(self, imgs):
-        # Ensure imgs is a batch of tensors [B, C, H, W] and is on the correct device
+    def detect(self, imgs, query_item=None):
+        # Input imgs shape [B, C, H, W]
         imgs = imgs.to(self.device)
+        selected_num = 0
 
-        # Inference
+        # Run inference
         with torch.no_grad():
-            pred = self.model(imgs, augment=False, visualize=False)
+            output = self.model(imgs, augment=False, visualize=False)
 
-        # Apply non-max suppression to each prediction
-        preds = [non_max_suppression(p, self.conf_thresh, self.iou_thresh, classes=None, agnostic=False) for p in pred]
+        # Apply non-max suppression
+        pred = non_max_suppression(output[0], self.conf_thresh, self.iou_thresh, classes=None, agnostic=False)
 
         # Process detections
-        detected_objects = []
-        for pred in preds:
-            for det in pred:
-                if det is not None and len(det):
-                    for *xyxy, conf, cls in det:
-                        # Filter out detections with low confidence
-                        if conf < self.conf_thresh or not (0<=int(cls)<80): continue
-                        # Rescale coordinates to original image size
-                        xyxy = det[:, :4].cpu().numpy()
-                        xyxy = (xyxy / self.stride).astype(int)
-                        # Append the detected object to the list
-                        detected_objects.append({
-                            'box': xyxy,
-                            'confidence': float(conf),
-                            'class': self.names[int(cls)]
-                        })
+        all_detected = []
+        
+        for det in pred:
+            detected_objects = set()
 
-        return detected_objects
+            # If there are detections in the image
+            if det is not None and len(det):
+                for *_, conf, cls in det:
+                    # Filter out detections with low confidence
+                    if conf < self.conf_thresh or not (0<=int(cls)<80): continue
+
+                    detected_objects.add(self.names[int(cls)])
+            
+            # Count the number of selected items
+            if query_item is not None and query_item in detected_objects:
+                selected_num += 1
+            # Append the detected object to the list
+            all_detected.append(list(detected_objects))
+
+        return all_detected, selected_num
+
 
