@@ -12,6 +12,7 @@ def main():
         Resize((640, 640)),
         ToTensor()
     ])
+    
     # Setup data loader
     data_loader = VOCDataLoader(VOC_IMAGE_DIR, VOC_ANNOTATION_DIR, transform=transform).get_data_loader()
 
