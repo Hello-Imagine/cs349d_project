@@ -33,7 +33,7 @@ if __name__ == "__main__":
     for image_id in selected_image_ids:
         # 加载图像
         image_info = coco.loadImgs(image_id)[0]
-        image_path = f"data/val2017/{image_info['file_name']}"
+        image_path = f"dataCOCO/val2017/{image_info['file_name']}"
         image = Image.open(image_path).convert('RGB')
 
         # 在图像上运行目标检测
