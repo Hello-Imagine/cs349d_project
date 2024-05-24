@@ -3,3 +3,5 @@
 
 # Ignore all files in the dataloader directory
 /dataCOCO/*
+
+yolov5s.pt
