@@ -50,5 +50,3 @@ if __name__ == "__main__":
     for i, (image, img_path) in enumerate(val_loader):
         pred = run_detection(image, model, device)
         plot_results(image, pred, model, save_path=f'results/{Path(img_path[0]).name}')
-        if i == 4:  # 只显示前5张图像
-            break
