@@ -1,7 +1,7 @@
 from torchvision import datasets
 
 class CustomCIFAR10(datasets.CIFAR10):
-    def __init__(self, root, train=True, transform=None, target_transform=None, download=False, num_samples=None):
+    def __init__(self, root, train=True, transform=None, target_transform=None, download=False, num_samples=20):
         super().__init__(root, train=train, transform=transform, target_transform=target_transform, download=download)
         # CIFAR-10 class names to convert indices to names
         self.class_names = self.classes

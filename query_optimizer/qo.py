@@ -5,13 +5,16 @@ class QueryOptimizer:
         self.query = query
         self.detector = ml_udf
         self.dataloader = self.setup_dataloader()
-        self.pp = self.load_pp_model()
+        self.pp = self.load_pp()
     
     def setup_dataloader(self):
         raise NotImplementedError("Data loader setup must be implemented by subclasses.")
     
-    def load_pp_model(self):
+    def load_pp(self):
         raise NotImplementedError("Model loading must be implemented by subclasses.")
+    
+    def execute_pp(self, inputs):
+        raise NotImplementedError("Model execution must be implemented by subclasses.")
     
     def run(self):
         total_filtered = 0
@@ -21,7 +24,7 @@ class QueryOptimizer:
             images = batch['image']
 
             # Filter data using probabilistic predicates
-            pp_output = self.pp(images, self.query)
+            pp_output = self.execute_pp(images)
             pp_output = torch.sigmoid(pp_output)
             filtered = images[pp_output > 0.5]
             total_filtered += len(filtered)

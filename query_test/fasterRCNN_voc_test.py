@@ -1,13 +1,10 @@
-import os
 from torchvision.transforms import Compose, Resize, ToTensor
 from dataloader.voc_dataloader import VOCDataLoader
 import torchvision
 import torch
 import matplotlib.pyplot as plt
 
-VOC_IMAGE_DIR = 'data/VOC2012/JPEGImages'
-VOC_ANNOTATION_DIR = 'data/VOC2012/Annotations'
-QUERY_ITEM = "person"
+from config import VOC_IMAGE_DIR, VOC_ANNOTATION_DIR, QUERY_ITEM
 
 def main():
     transform = Compose([

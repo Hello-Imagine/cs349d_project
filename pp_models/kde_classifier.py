@@ -2,6 +2,8 @@ import numpy as np
 import pickle
 from sklearn.neighbors import KernelDensity
 
+from config import KDE_MODEL_PATH
+
 class KDEClassifier:
     def __init__(self, bandwidth=1.0):
         self.bandwidth = bandwidth
@@ -31,7 +33,7 @@ class KDEClassifier:
             return pickle.load(f)
 
 # Example usage
-def kde(X_train, y_train, model_filepath='kde_model.pkl'):
+def kde_train(X_train, y_train, model_filepath=KDE_MODEL_PATH):
     classifier = KDEClassifier(bandwidth=1.0)
     classifier.fit(X_train, y_train)
     classifier.save(model_filepath)

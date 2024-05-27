@@ -4,7 +4,6 @@ from torchvision import transforms
 from torchvision.datasets import DatasetFolder
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
-import numpy as np
 
 def run_detection(image):
     transform = transforms.Compose([

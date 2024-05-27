@@ -5,8 +5,7 @@ from torch.utils.data import DataLoader
 from dataloader.cifar_dataloader import CustomCIFAR10
 import matplotlib.pyplot as plt
 
-CIFAR_ROOT_DIR = 'data'
-QUERY_ITEM = "person"
+from config import CIFAR_ROOT_DIR, QUERY_ITEM
 
 # COCO数据集的类名列表
 COCO_NAMES = [

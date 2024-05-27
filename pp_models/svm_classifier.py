@@ -2,6 +2,7 @@ import time
 import pickle
 from sklearn.svm import SVC
 
+from config import SVM_MODEL_PATH
 
 def SVM(X_train, y_train):
     time_svm_start = time.time()
@@ -12,11 +13,10 @@ def SVM(X_train, y_train):
     
     time_svm_end = time.time()
 
-    model_filepath = "classifier_svm.pkl"
-    with open(model_filepath, 'wb+') as f:
+    with open(SVM_MODEL_PATH, 'wb+') as f:
         pickle.dump(svm_classifier, f)
     
-    print(f"SVM model saved to {model_filepath}")
+    print(f"SVM model saved to {SVM_MODEL_PATH}")
     print(f"Training time: {time_svm_end - time_svm_start:.2f} seconds")
 
     return svm_classifier

@@ -3,10 +3,11 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-import pickle
+
+from config import DNN_MODEL_PATH
 
 class DNN(nn.Module):
-    def __init__(self, input_dim):
+    def __init__(self, input_dim=3):
         super(DNN, self).__init__()
         self.layer1 = nn.Sequential(
             nn.Linear(input_dim, 256),
@@ -68,8 +69,6 @@ def train_model(X_train, y_train, input_dim):
         scheduler.step(loss)
 
     # Save the model
-    model_filepath = "classifier_dnn.pth"
-    with open(model_filepath, 'wb+') as f:
-        pickle.dump(model, f)
+    torch.save(model.state_dict(), DNN_MODEL_PATH)
 
     return model

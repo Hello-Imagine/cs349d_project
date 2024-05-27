@@ -3,9 +3,7 @@ from torch.utils.data import DataLoader
 
 from dataloader.cifar_dataloader import CustomCIFAR10
 from ml_udf.yolov5.yolo_detector import YOLOv5SegmentationDetector
-
-CIFAR_ROOT_DIR = 'data'
-QUERY_ITEM = "person"
+from config import CIFAR_ROOT_DIR, QUERY_ITEM
 
 def main(num_images=20):
     transform = transforms.Compose([

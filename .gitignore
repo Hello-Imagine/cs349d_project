@@ -1,7 +1,7 @@
 # Ignore all files in the data directory
 /data/*
-
-# Ignore all files in the dataloader directory
 /dataCOCO/*
 
+# Ignore model parameters
+/pp_params/*
 yolov5s.pt

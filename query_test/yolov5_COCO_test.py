@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pycocotools.coco import COCO
 
+from config import QUERY_ITEM
+
 # 加载YOLOv5模型
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 
@@ -23,11 +25,11 @@ if __name__ == "__main__":
     num_images = 20
     selected_image_ids = image_ids[:num_images]
 
-    # 获取person类的ID
-    person_category_id = coco.getCatIds(catNms=['person'])[0]
+    # 获取 QUERY_ITEM 类的ID
+    category_id = coco.getCatIds(catNms=[QUERY_ITEM])[0]
 
     # 初始化计数器
-    num_images_with_person = 0
+    num_images_with_query = 0
 
     # 遍历选定的图像
     for image_id in selected_image_ids:
@@ -39,22 +41,22 @@ if __name__ == "__main__":
         # 在图像上运行目标检测
         results = run_detection(image)
 
-        # 检查是否有person目标被检测到
+        # 检查是否有query目标被检测到
         detected_category_ids = results.xyxy[0][:, 5].numpy().astype(int)
-        if person_category_id in detected_category_ids:
-            num_images_with_person += 1
+        if category_id in detected_category_ids:
+            num_images_with_query += 1
 
-            # 显示包含person目标的图像
+            # 显示包含query目标的图像
             plt.figure(figsize=(12, 8))
             plt.imshow(np.array(image))
             ax = plt.gca()
 
-            # 获取person目标的边界框和置信度得分
-            person_boxes = results.xyxy[0][results.xyxy[0][:, 5] == person_category_id][:, :4].numpy()
-            person_scores = results.xyxy[0][results.xyxy[0][:, 5] == person_category_id][:, 4].numpy()
+            # 获取query目标的边界框和置信度得分
+            query_boxes = results.xyxy[0][results.xyxy[0][:, 5] == category_id][:, :4].numpy()
+            query_scores = results.xyxy[0][results.xyxy[0][:, 5] == category_id][:, 4].numpy()
 
-            # 在图像上绘制person目标的边界框和置信度得分
-            for box, score in zip(person_boxes, person_scores):
+            # 在图像上绘制query目标的边界框和置信度得分
+            for box, score in zip(query_boxes, query_scores):
                 if score > 0.5:
                     ax.add_patch(plt.Rectangle((box[0], box[1]), box[2] - box[0], box[3] - box[1],
                                                fill=False, edgecolor='red', linewidth=2))
@@ -65,5 +67,5 @@ if __name__ == "__main__":
             plt.show()
 
     # 计算selectivity
-    selectivity = num_images_with_person / num_images
-    print(f"Selectivity for 'person' category: {selectivity:.4f}")
+    selectivity = num_images_with_query / num_images
+    print(f"Selectivity for {QUERY_ITEM} category: {selectivity:.4f}")
