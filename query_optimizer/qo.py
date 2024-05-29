@@ -1,11 +1,11 @@
 import torch
 
 class QueryOptimizer:
-    def __init__(self, query, ml_udf):
+    def __init__(self, query, ml_udf, accuracy=0.8):
         self.query = query
         self.detector = ml_udf
         self.dataloader = self.setup_dataloader()
-        self.pp = self.load_pp()
+        self.pp = self.load_pp(accuracy)
     
     def setup_dataloader(self):
         raise NotImplementedError("Data loader setup must be implemented by subclasses.")
@@ -27,7 +27,7 @@ class QueryOptimizer:
             pp_output = self.execute_pp(images)
             pp_output = torch.sigmoid(pp_output)
             filtered = images[pp_output > 0.5]
-            total_filtered += len(filtered)
+            total_filtered += images.shape[0] - filtered.shape[0]
 
             # Run inference
             detected, selected_num = self.detector.detect(filtered, self.query)

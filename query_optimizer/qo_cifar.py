@@ -5,6 +5,7 @@ from dataloader.cifar_dataloader import CustomCIFAR10
 from query_optimizer.qo import QueryOptimizer
 from pp_models.kde_classifier import KDEClassifier
 from config import KDE_MODEL_PATH
+from utils import convert_to_int
 
 class QueryOptimizerCIFAR(QueryOptimizer):
     def __init__(self, query, ml_udf):
@@ -19,9 +20,9 @@ class QueryOptimizerCIFAR(QueryOptimizer):
         return DataLoader(dataset, batch_size=4, shuffle=True, num_workers=2)
     
     # KDE perform best for CIFAR-10 dataset
-    def load_pp(self):
-        # Load the pre-trained KDE model
-        pp_model = KDEClassifier.load(f'{KDE_MODEL_PATH}/{self.query}.pkl')
+    def load_pp(self, accuracy):
+        # Load the pre-trained KDE model given the accuracy
+        pp_model = KDEClassifier.load(f'{KDE_MODEL_PATH}/{convert_to_int(accuracy)}_{self.query}.pkl')
         return pp_model
 
     def execute_pp(self, inputs):

@@ -26,7 +26,6 @@ class YOLOv5SegmentationDetector:
         self.model.to(self.device).eval()
 
     def detect(self, imgs, query_item=None):
-        # Input imgs shape [B, C, H, W]
         imgs = imgs.to(self.device)
         selected_num = 0
 
