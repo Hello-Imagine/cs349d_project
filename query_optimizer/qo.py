@@ -37,6 +37,7 @@ class QueryOptimizer:
             print("Detected objects names:", detected)
         
         selectivity = total_selected / max(1, (len(self.dataloader.dataset) - total_filtered))
+        data_reduction = total_filtered / len(self.dataloader.dataset)
 
-        return detected, selectivity
+        return detected, selectivity, data_reduction
         

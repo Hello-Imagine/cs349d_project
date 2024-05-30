@@ -7,8 +7,9 @@ detector = YOLOv5SegmentationDetector('yolov5s.pt', conf_thresh=0.1)
 
 # Create a QueryOptimizerCIFAR object
 qo_cifar = QueryOptimizerCIFAR(QUERY_ITEM, detector)
-detected, selectivity = qo_cifar.run()
+detected, selectivity, data_reduction = qo_cifar.run()
 
 # Print the detected objects and selectivity
 print(f"Detected objects names: {detected}")
 print(f"Selectivity: {selectivity}")
+print(f"Data reduction: {data_reduction}")
